@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>User</title>
+    </head>
+    <body>
+        <h2>Add user</h2>
+        <form th:action="@{/SpringRESTBoot/saveUser}"
+              th:object="${user}"
+              method="post">
+            <label for="first_name">First Name:</label>
+            <input type="text" id="first_name" name="firstName"><br>
+            <label for="last_name">Last Name:</label>
+            <input type="text" id="last_name" name="lastName"><br>
+            <input type="submit" value="Create">
+        </form>
+        <br>
+        <a th:href="@{/SpringRESTBoot/users}">Back to User List</a>
+    </body>
+</html>

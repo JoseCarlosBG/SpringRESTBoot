@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Gift certificate</title>
+</head>
+<body>
+<h2>Gift certificate</h2>
+ID: <span th:text="${gift.id}"></span>
+<br /> Name: <span th:text="${gift.name}"></span>
+<br /> Description: <span th:text="${gift.description}"></span>
+<br /> Price: <span th:text="${gift.price}"></span>
+<br /> Duration: <span th:text="${gift.duration}"></span>
+<br /> Created on: <span th:text="${gift.createDate}"></span>
+<br /> Updated on: <span th:text="${gift.lastUpdateDate}"></span>
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="tag : ${listTags}">
+    <td th:text="${tag.id}"></td>
+    <td th:text="${tag.name}"></td>
+    <td><a th:href="@{/SpringRESTBoot/deleteTag/{id}(id=${gift.id})}"
+           onclick="return confirm('Delete record?')">Delete</a></td>
+  </tr>
+  </tbody>
+</table>
+<footer style="font-size:large" class="panel-footer">
+  Total items:[[${totalItems}]] : Page [[${currentPage}]] of [[${totalPages}]]
+  &nbsp; &nbsp; - &nbsp;
+  <span th:each="i: ${#numbers.sequence(1,totalPages)}">
+        <a th:href="@{/SpringRESTBoot/gift/{id}/{page}(id=${currentGiftId}, page=${i})}">[[${i}]]</a>
+        &nbsp; &nbsp;
+    </span>
+</footer>
+<br>
+<a th:href="@{/SpringRESTBoot/addTag}">Create New Tag</a>
+<br>
+<a th:href="@{/SpringRESTBoot/gifts}">Back to Gift List</a>
+</body>
+</html>

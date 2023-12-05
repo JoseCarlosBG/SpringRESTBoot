@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User</title>
+</head>
+<body>
+<h2>User</h2>
+ID: <span th:text="${user.id}"></span>
+<br /> First Name: <span th:text="${user.first_name}"></span>
+<br /> Last Name: <span th:text="${user.last_name}"></span>
+<table>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Cost</th>
+        <th>Created on</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="gift : ${listGifts}">
+        <td th:text="${gift.name}"></td>
+        <td th:text="${gift.cost}"></td>
+        <td th:text="${gift.createDate}"></td>
+        <td><a th:href="@{/SpringRESTBoot/deleteOrder/{id}(id=${gift.idGift})}"
+               onclick="return confirm('Delete record?')">Delete</a></td>
+    </tr>
+    </tbody>
+</table>
+<footer style="font-size:large" class="panel-footer">
+    Total items:[[${totalItems}]] : Page [[${currentPage}]] of [[${totalPages}]]
+    &nbsp; &nbsp; - &nbsp;
+    <span th:each="i: ${#numbers.sequence(1,totalPages)}">
+        <a th:href="@{/SpringRESTBoot/user/{id}/{page}(id=${currentUserId}, page=${i})}">[[${i}]]</a>
+        &nbsp; &nbsp;
+    </span>
+</footer>
+<br>
+<a th:href="@{/SpringRESTBoot/addOrder}">Adds new order</a>
+<br>
+<a th:href="@{/SpringRESTBoot/highestCost}">Cost with highest order for this user</a>
+<br>
+<a th:href="@{/SpringRESTBoot/users}">Back to User List</a>
+</body>
+</html>

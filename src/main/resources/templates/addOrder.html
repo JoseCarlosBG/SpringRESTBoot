@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Gift certificate</title>
+</head>
+<body>
+<h2>Add new order</h2>
+<form th:action="@{/SpringRESTBoot/saveOrder}"
+      th:object="${order}"
+      method="post">
+  <label for="name">Name:</label>
+  <input type="text" id="name" name="name"><br>
+  <input type="submit" value="Create">
+</form>
+<br>
+<a th:href="@{/SpringRESTBoot/user/{id}(id=${currentUserId})}">Back to User Details</a>
+</body>
+</html>

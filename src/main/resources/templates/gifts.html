@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>List of gift certificates</title>
+</head>
+<body>
+<h2>List of gift certificates</h2>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Price</th>
+        <th>Duration</th>
+        <th>Created on</th>
+        <th>Last updated</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="gift : ${gifts}">
+        <td th:text="${gift.id}"></td>
+        <td th:text="${gift.name}"></td>
+        <td th:text="${gift.description}"></td>
+        <td th:text="${gift.price}"></td>
+        <td th:text="${gift.duration}"></td>
+        <td th:text="${gift.createDate}"></td>
+        <td th:text="${gift.lastUpdateDate}"></td>
+        <td><a th:href="@{/SpringRESTBoot/gift/{id}(id=${gift.id})}">Details</a></td>
+        <td><a th:href="@{/SpringRESTBoot/modifyGift/{id}(id=${gift.id})}">Update</a></td>
+        <td><a th:href="@{/SpringRESTBoot/deleteGift/{id}(id=${gift.id})}"
+               onclick="return confirm('Delete record?')">Delete</a></td>
+    </tr>
+    </tbody>
+</table>
+<footer style="font-size:large" class="panel-footer">
+    Total items:[[${totalItems}]] : Page [[${currentPage}]] of [[${totalPages}]]
+    &nbsp; &nbsp; - &nbsp;
+    <span th:each="i: ${#numbers.sequence(1,totalPages)}">
+        <a th:href="@{/SpringRESTBoot/gifts/{id}(id=${i})}">[[${i}]]</a>
+        &nbsp; &nbsp;
+    </span>
+</footer>
+<br>
+<a th:href="@{/SpringRESTBoot/addGift}">Create New Gift</a>
+<br>
+<a th:href="@{/SpringRESTBoot/searchByTag}">Search Gift by Tags</a>
+<br>
+<a th:href="@{/SpringRESTBoot/}">Main page</a>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>List of gift certificates</title>
+</head>
+<body>
+<h2>List of users</h2>
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>First Name</th>
+    <th>Last Name</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="user : ${users}">
+    <td th:text="${user.id}"></td>
+    <td th:text="${user.first_name}"></td>
+    <td th:text="${user.last_name}"></td>
+    <td><a th:href="@{/SpringRESTBoot/user/{id}(id=${user.id})}">Details</a></td>
+    <td><a th:href="@{/SpringRESTBoot/deleteUser/{id}(id=${user.id})}"
+           onclick="return confirm('Delete record?')">Delete</a></td>
+  </tr>
+  </tbody>
+</table>
+<footer style="font-size:large" class="panel-footer">
+  Total items:[[${totalItems}]] : Page [[${currentPage}]] of [[${totalPages}]]
+  &nbsp; &nbsp; - &nbsp;
+  <span th:each="i: ${#numbers.sequence(1,totalPages)}">
+        <a th:href="@{/SpringRESTBoot/users/{id}(id=${i})}">[[${i}]]</a>
+        &nbsp; &nbsp;
+    </span>
+</footer>
+<br>
+<a th:href="@{/SpringRESTBoot/addUser}">Create New User</a>
+<br>
+<a th:href="@{/SpringRESTBoot/}">Main page</a>
+</body>
+</html>

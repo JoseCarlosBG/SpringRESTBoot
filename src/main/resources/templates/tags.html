@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>List of tags</title>
+</head>
+<body>
+<h2>List of tags</h2>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="tag : ${tags}">
+        <td th:text="${tag.id}"></td>
+        <td th:text="${tag.name}"></td>
+        <td><a th:href="@{/SpringRESTBoot/deleteTag/{id}(id=${tag.id})}"
+               onclick="return confirm('Delete record?')">Delete</a></td>
+    </tr>
+    </tbody>
+</table>
+<footer style="font-size:large" class="panel-footer">
+    Total items:[[${totalItems}]] : Page [[${currentPage}]] of [[${totalPages}]]
+    &nbsp; &nbsp; - &nbsp;
+    <span th:each="i: ${#numbers.sequence(1,totalPages)}">
+        <a th:href="@{/SpringRESTBoot/tags/{id}(id=${i})}">[[${i}]]</a>
+        &nbsp; &nbsp;
+    </span>
+</footer>
+<br>
+<a th:href="@{/SpringRESTBoot/}">Main page</a>
+<br>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Search gifts</title>
+</head>
+<body>
+<h2>Search gift certificates by tag</h2>
+<form th:action="@{/SpringRESTBoot/filterByTag}"
+      th:object="${string}"
+      method="get">
+  <label for="tags">Tags to search (use ";" to put different tags):</label>
+  <input type="text" id="tags" name="tags"><br>
+  <input type="submit" value="Search">
+</form>
+<br>
+<a th:href="@{/SpringRESTBoot/gifts}">Back to Gift List</a>
+</body>
+</html>

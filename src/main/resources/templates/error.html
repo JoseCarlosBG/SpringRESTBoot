@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Generic error</h1>
+<h2>Something went wrong</h2>
+<p th:text="${'Status code is ' + status + ': ' + error + '.'}"></p>
+<a th:href="@{/SpringRESTBoot/}">Back to Main Page</a>
+</body>
+</html>

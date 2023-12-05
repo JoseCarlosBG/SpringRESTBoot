@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Order with the highest cost</title>
+</head>
+<body>
+<h2>Order with the highest cost</h2>
+
+  <br />Gift Certificate with highest cost: <span th:text="${highestCost.name}"></span>, with cost:<span th:text="${highestCost.cost}"></span>
+
+<a th:href="@{/SpringRESTBoot/user/{id}(id=${currentUserId})}">Back to User Details</a>
+</body>
+</html>
