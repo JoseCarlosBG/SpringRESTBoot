@@ -16,17 +16,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
-@RequestMapping("/SpringRESTBoot")
-public class UserController {
+@RequestMapping("/SpringRESTBoot/users")
+public class UserController extends MainController{
     @Autowired
     private UserService userService;
     @Autowired
@@ -36,8 +33,7 @@ public class UserController {
     @Autowired
     private GiftTagService gtService;
 
-    private Integer currentUserId=0; //to keep track of our current User ID, in order to correctly add the records
-
+    @GetMapping("/{pageNumber}")
     public ResponseEntity<CollectionModel<EntityModel<User>>> getOneUserPage(@PageableDefault(size = 10, sort = "id") Pageable pageable,
                                                                              @PathVariable("pageNumber") Integer currentPage) {
         Page<User> page;
@@ -57,28 +53,28 @@ public class UserController {
         List<Link> links = new ArrayList<>();
 
         // Self link
-        links.add(WebMvcLinkBuilder.linkTo(methodOn(MainController.class).getOneUserPage(pageable, numPage)).withSelfRel());
+        links.add(WebMvcLinkBuilder.linkTo(methodOn(UserController.class).getOneUserPage(pageable, numPage)).withSelfRel());
 
         // First page link
-        links.add(WebMvcLinkBuilder.linkTo(methodOn(MainController.class).getOneUserPage(PageRequest.of(1, pageable.getPageSize(), pageable.getSort()), 1)).withRel("first"));
+        links.add(WebMvcLinkBuilder.linkTo(methodOn(UserController.class).getOneUserPage(PageRequest.of(1, pageable.getPageSize(), pageable.getSort()), 1)).withRel("first"));
 
         // Last page link
-        links.add(WebMvcLinkBuilder.linkTo(methodOn(MainController.class).getOneUserPage(PageRequest.of(totalPages - 1, pageable.getPageSize(), pageable.getSort()), totalPages)).withRel("last"));
+        links.add(WebMvcLinkBuilder.linkTo(methodOn(UserController.class).getOneUserPage(PageRequest.of(totalPages - 1, pageable.getPageSize(), pageable.getSort()), totalPages)).withRel("last"));
 
         // Next page link
         if (page.hasNext()) {
-            links.add(WebMvcLinkBuilder.linkTo(methodOn(MainController.class).getOneUserPage(page.nextPageable(), numPage + 1)).withRel("next"));
+            links.add(WebMvcLinkBuilder.linkTo(methodOn(UserController.class).getOneUserPage(page.nextPageable(), numPage + 1)).withRel("next"));
         }
 
         // Previous page link
         if (page.hasPrevious()) {
-            links.add(WebMvcLinkBuilder.linkTo(methodOn(MainController.class).getOneUserPage(page.previousPageable(), numPage -1 )).withRel("prev"));
+            links.add(WebMvcLinkBuilder.linkTo(methodOn(UserController.class).getOneUserPage(page.previousPageable(), numPage -1 )).withRel("prev"));
         }
 
         int finalNumPage = numPage;
         List<EntityModel<User>> userResources = users.stream()
                 .map(user -> EntityModel.of(user,
-                        WebMvcLinkBuilder.linkTo(methodOn(MainController.class).getUserOneGiftPageById(user.getId(), finalNumPage)).withSelfRel()))
+                        WebMvcLinkBuilder.linkTo(methodOn(UserDetailController.class).getUserOneGiftPageById(user.getId(), finalNumPage)).withSelfRel()))
                 .collect(Collectors.toList());
 
         CollectionModel<EntityModel<User>> response = CollectionModel.of(userResources, links);
@@ -87,60 +83,12 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    public ResponseEntity<EntityModel<Map<String,List<UserGift>>>> getUserOneGiftPageById(@PathVariable("id") Integer id, @PathVariable("page") Integer currentPage) {
-        User user= userService.getUserById(id);
-        if (user==null){
-            throw new PageNotFoundException("Page not found", id);
-        }
-        Page<UserGift> page;
-        int numPage;
-        if(currentPage<=0){
-            throw new PageNotFoundException("Page not found", currentPage);
-        } else {
-            numPage = currentPage;
-        }
-        page = ugService.findPage(numPage);
-        int totalPages = page.getTotalPages();
-
-        if (totalPages<currentPage){
-            throw new PageNotFoundException("Page not found", currentPage);
-        }
-
-        List<UserGift> listUg = ugService.getUGByUserId(id);
-        List<UserGift> listGifts = page.getContent().stream()
-                .filter(gift -> listUg.stream().anyMatch(ug
-                        -> gift.getIdGift().equals(ug.getIdGift()))).toList();
-
-        List<Link> links = new ArrayList<>();
-
-        // Self link
-        links.add(linkTo(methodOn(MainController.class).getUserOneGiftPageById(id, numPage)).withSelfRel());
-
-        // First page link
-        links.add(linkTo(methodOn(MainController.class).getUserOneGiftPageById(id, 1)).withRel("first"));
-
-        // Last page link
-        links.add(linkTo(methodOn(MainController.class).getUserOneGiftPageById(id, totalPages)).withRel("last"));
-
-        // Next page link
-        if (page.hasNext()) {
-            links.add(linkTo(methodOn(MainController.class).getUserOneGiftPageById(id, numPage + 1)).withRel("next"));
-        }
-
-        // Previous page link
-        if (page.hasPrevious()) {
-            links.add(linkTo(methodOn(MainController.class).getUserOneGiftPageById(id, numPage - 1)).withRel("prev"));
-        }
-        Map<String, List<UserGift>> giftDetails = new HashMap<>();
-        giftDetails.put(user.getFirstName() + " " + user.getLastName(), listGifts);
-        currentUserId=id;
-        EntityModel<Map<String,List<UserGift>>> userResource = EntityModel.of(giftDetails, links);
-
-        userResource.add(linkTo(methodOn(MainController.class).getOneUserPage(PageRequest.of(1, 5), numPage)).withRel("users"));
-
-        return ResponseEntity.ok(userResource);
+    @GetMapping()
+    public ResponseEntity<CollectionModel<EntityModel<User>>> getFirstUserPage(){
+        return getOneUserPage(PageRequest.of(1, 5),1);
     }
 
+    @PostMapping("/createUser")
     public HttpEntity<EntityModel<User>> createUser(@RequestBody User user) {
         User savedUser = userService.createUser(user);
 
@@ -149,6 +97,7 @@ public class UserController {
         return ResponseEntity.created(location).build();
     }
 
+    @GetMapping("/deleteUser/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable("id")  Integer id) {
         // Delete all records in UserGift with the specified id for User, then delete the User
         ugService.deleteUGByUser(id);
@@ -157,6 +106,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/userOrderInfo/{userId}/{page}")
     public ResponseEntity<CollectionModel<EntityModel<Map<String, Object>>>> getUserOrderInfo(
             @PathVariable("userId") Integer userId, @PathVariable("page") Integer page,
             @PageableDefault(size = 5, sort = "id_user") Pageable pageable) {
@@ -175,32 +125,32 @@ public class UserController {
 
         // Self link
         links.add(WebMvcLinkBuilder.linkTo(
-                methodOn(MainController.class).getUserOrderInfo(userId, page, pageable)).withSelfRel());
+                methodOn(UserController.class).getUserOrderInfo(userId, page, pageable)).withSelfRel());
 
         // First page link
         links.add(WebMvcLinkBuilder.linkTo(
-                methodOn(MainController.class).getUserOrderInfo(userId, 0, pageable)).withRel("first"));
+                methodOn(UserController.class).getUserOrderInfo(userId, 0, pageable)).withRel("first"));
 
         // Last page link
         links.add(WebMvcLinkBuilder.linkTo(
-                methodOn(MainController.class).getUserOrderInfo(userId, totalPages - 1, pageable)).withRel("last"));
+                methodOn(UserController.class).getUserOrderInfo(userId, totalPages - 1, pageable)).withRel("last"));
 
         // Next page link
         if (userOrderPage.hasNext()) {
             links.add(WebMvcLinkBuilder.linkTo(
-                    methodOn(MainController.class).getUserOrderInfo(userId, page + 1, pageable)).withRel("next"));
+                    methodOn(UserController.class).getUserOrderInfo(userId, page + 1, pageable)).withRel("next"));
         }
 
         // Previous page link
         if (userOrderPage.hasPrevious()) {
             links.add(WebMvcLinkBuilder.linkTo(
-                    methodOn(MainController.class).getUserOrderInfo(userId, page - 1, pageable)).withRel("prev"));
+                    methodOn(UserController.class).getUserOrderInfo(userId, page - 1, pageable)).withRel("prev"));
         }
 
         List<EntityModel<Map<String, Object>>> userOrderResources = userOrders.stream()
                 .map(order -> EntityModel.of(order,
                         WebMvcLinkBuilder.linkTo(
-                                methodOn(MainController.class).getUserOrderInfo(userId, page, pageable)).withSelfRel()))
+                                methodOn(UserController.class).getUserOrderInfo(userId, page, pageable)).withSelfRel()))
                 .collect(Collectors.toList());
 
         CollectionModel<EntityModel<Map<String, Object>>> response = CollectionModel.of(userOrderResources, links);
@@ -208,6 +158,12 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/userOrderInfo/{userId}")
+    public ResponseEntity<CollectionModel<EntityModel<Map<String, Object>>>> getFirstUserOrderInfo(@PathVariable("userId") Integer userId, @PageableDefault(size = 5, sort = "id_user") Pageable pageable) {
+        return getUserOrderInfo(userId, 0, pageable);
+    }
+
+    @GetMapping("/userMostUsedTag/{userId}")
     public ResponseEntity<String> getUserMostUsedTag(@PathVariable("userId") Integer userId) {
         // Logic to retrieve the most widely used tag of the user with the highest cost of all orders
         String mostUsedTag = userService.getUserMostUsedTag(userId);
@@ -215,6 +171,7 @@ public class UserController {
         return ResponseEntity.ok(mostUsedTag);
     }
 
+    @PostMapping("/saveOrder/{id}")
     public ResponseEntity<EntityModel<GiftCertificate>> createCert(@RequestBody GiftCertificate gift, @PathVariable("id")  Integer id) {
         List<GiftCertificate> giftList = giftService.getAllGifts().stream().filter(t -> t.getName().equals(gift.getName())).toList();
         GiftCertificate gift1;
@@ -235,6 +192,7 @@ public class UserController {
         return ResponseEntity.created(location).build();
     }
 
+    @GetMapping("/deleteOrder/{id}")
     public ResponseEntity<Void> deleteOrder(@PathVariable("id") Integer id) {
         ugService.deleteUGByGift(id);
         giftService.deleteGift(id);

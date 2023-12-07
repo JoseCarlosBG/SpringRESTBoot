@@ -26,12 +26,13 @@ import java.util.stream.Collectors;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/SpringRESTBoot")
+@RequestMapping("/SpringRESTBoot/tags")
 public class TagController {
     @Autowired
     private TagService tagService;
     @Autowired
     private GiftTagService gtService;
+    @GetMapping("/{pageNumber}")
     public ResponseEntity<CollectionModel<EntityModel<Tag>>> getOneTagPage(@PageableDefault(size = 10, sort = "id") Pageable pageable,
                                                                            @PathVariable("pageNumber") Integer currentPage){
 
@@ -56,27 +57,27 @@ public class TagController {
         List<Link> links = new ArrayList<>();
 
         // Self link
-        links.add(WebMvcLinkBuilder.linkTo(methodOn(MainController.class).getOneTagPage(pageable, numPage)).withSelfRel());
+        links.add(WebMvcLinkBuilder.linkTo(methodOn(TagController.class).getOneTagPage(pageable, numPage)).withSelfRel());
 
         // First page link
-        links.add(WebMvcLinkBuilder.linkTo(methodOn(MainController.class).getOneTagPage(PageRequest.of(1, pageable.getPageSize(), pageable.getSort()), 1)).withRel("first"));
+        links.add(WebMvcLinkBuilder.linkTo(methodOn(TagController.class).getOneTagPage(PageRequest.of(1, pageable.getPageSize(), pageable.getSort()), 1)).withRel("first"));
 
         // Last page link
-        links.add(WebMvcLinkBuilder.linkTo(methodOn(MainController.class).getOneTagPage(PageRequest.of(totalPages - 1, pageable.getPageSize(), pageable.getSort()), totalPages)).withRel("last"));
+        links.add(WebMvcLinkBuilder.linkTo(methodOn(TagController.class).getOneTagPage(PageRequest.of(totalPages - 1, pageable.getPageSize(), pageable.getSort()), totalPages)).withRel("last"));
 
         // Next page link
         if (page.hasNext()) {
-            links.add(WebMvcLinkBuilder.linkTo(methodOn(MainController.class).getOneTagPage(page.nextPageable(), numPage + 1)).withRel("next"));
+            links.add(WebMvcLinkBuilder.linkTo(methodOn(TagController.class).getOneTagPage(page.nextPageable(), numPage + 1)).withRel("next"));
         }
 
         // Previous page link
         if (page.hasPrevious()) {
-            links.add(WebMvcLinkBuilder.linkTo(methodOn(MainController.class).getOneTagPage(page.previousPageable(),numPage -1)).withRel("prev"));
+            links.add(WebMvcLinkBuilder.linkTo(methodOn(TagController.class).getOneTagPage(page.previousPageable(),numPage -1)).withRel("prev"));
         }
 
         List<EntityModel<Tag>> tagResources = tags.stream()
                 .map(tag -> EntityModel.of(tag,
-                        WebMvcLinkBuilder.linkTo(methodOn(MainController.class).getGiftOneTagPageById(tag.getId(), numPage)).withSelfRel()))
+                        WebMvcLinkBuilder.linkTo(methodOn(GiftDetailController.class).getGiftOneTagPageById(tag.getId(), numPage)).withSelfRel()))
                 .collect(Collectors.toList());
 
         CollectionModel<EntityModel<Tag>> response = CollectionModel.of(tagResources, links);
@@ -84,6 +85,12 @@ public class TagController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping()
+    public ResponseEntity<CollectionModel<EntityModel<Tag>>> getFirstTagPage(){
+        return getOneTagPage(PageRequest.of(1, 10),1);
+    }
+
+    @PostMapping("/saveTag/{id}")
     public HttpEntity<EntityModel<Tag>> createTag(@RequestBody Tag tag, @PathVariable("id")  Integer id) {
         List<Tag> tagList = tagService.getAllTags().stream().filter(t -> t.getName().equals(tag.getName())).toList();
         Tag tag1;
@@ -104,6 +111,7 @@ public class TagController {
         return ResponseEntity.created(location).build();
     }
 
+    @GetMapping("/deleteTag/{id}")
     public ResponseEntity<Void> deleteTag(@PathVariable("id") Integer id) {
         gtService.deleteGTByTag(id);
         tagService.deleteTag(id);

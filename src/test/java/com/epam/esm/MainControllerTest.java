@@ -1,7 +1,6 @@
 package com.epam.esm;
 
-import com.epam.esm.controller.MainController;
-import com.epam.esm.controller.PageNotFoundException;
+import com.epam.esm.controller.*;
 import com.epam.esm.model.*;
 import com.epam.esm.service.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,8 +13,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
@@ -37,6 +34,16 @@ class MainControllerTest {
 
     @InjectMocks
     private MainController mainController;
+    @InjectMocks
+    private GiftController giftController;
+    @InjectMocks
+    private GiftDetailController giftDetailController;
+    @InjectMocks
+    private TagController tagController;
+    @InjectMocks
+    private UserController userController;
+    @InjectMocks
+    private UserDetailController userDetailController;
 
     @BeforeEach
     void setUp() {
@@ -62,7 +69,7 @@ class MainControllerTest {
         when(userService.findPage(anyInt())).thenReturn(mockPage);
 
         // Test the controller method
-        ResponseEntity<CollectionModel<EntityModel<User>>> response = mainController.getOneUserPage(PageRequest.of(1, 10), 1);
+        ResponseEntity<CollectionModel<EntityModel<User>>> response = userController.getOneUserPage(PageRequest.of(1, 10), 1);
 
         // Assertions
         assertEquals(200, response.getStatusCodeValue());
@@ -80,7 +87,7 @@ class MainControllerTest {
         when(userService.createUser(any(User.class))).thenReturn(mockUser);
 
         // Test the controller method
-        ResponseEntity<EntityModel<User>> response = (ResponseEntity<EntityModel<User>>) mainController.createUser(new User());
+        ResponseEntity<EntityModel<User>> response = (ResponseEntity<EntityModel<User>>) userController.createUser(new User());
 
         // Assertions
         assertEquals(201, response.getStatusCodeValue());
