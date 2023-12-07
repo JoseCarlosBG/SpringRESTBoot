@@ -1,15 +1,8 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.model.*;
-import com.epam.esm.service.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
@@ -21,7 +14,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequestMapping("/SpringRESTBoot")
 public class MainController {
     //Constants containing the common endpoints for the methods defined
-    public Integer currentUserId=0; //to keep track of our current User ID, in order to correctly add the records
+    public static Integer currentUserId=0; //to keep track of our current User ID, in order to correctly add the records
     @GetMapping("/")
     public ResponseEntity<EntityModel<Map<String, Object>>> mainPage() {
         Map<String, Object> mainPageInfo = new HashMap<>();
