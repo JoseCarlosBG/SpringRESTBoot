@@ -3,38 +3,24 @@ package com.epam.esm.model;
 import java.io.Serializable;
 import java.util.Objects;
 
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class GiftTagID implements Serializable {
-    private Integer idGift;
-    private Integer idTag;
-
-    public GiftTagID(Integer idGift, Integer idTag) {
-        this.idGift = idGift;
-        this.idTag = idTag;
-    }
-
-    public GiftTagID() {
-    }
+    private @Getter @Setter Integer idGift;
+    private @Getter @Setter Integer idTag;
 
     public GiftTagID(GiftTagID gtID) {
         this.idGift = gtID.getIdGift();
         this.idTag = gtID.getIdTag();
     }
-    public Integer getIdGift() {
-        return idGift;
-    }
-
-    public void setIdGift(Integer id) {
-        idGift = id;
-    }
-
-    public Integer getIdTag() {
-        return idTag;
-    }
-
-    public void setIdTag(Integer id) {
-        idTag = id;
-    }
-
     @Override
     public boolean equals(Object o) {
         if ( this == o ) {
@@ -47,7 +33,6 @@ public class GiftTagID implements Serializable {
         return Objects.equals( idGift, gt.idGift ) &&
                 Objects.equals( idTag, gt.idTag );
     }
-
     @Override
     public int hashCode() {
         return Objects.hash( idGift, idTag );

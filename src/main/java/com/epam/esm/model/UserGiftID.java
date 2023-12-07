@@ -3,34 +3,22 @@ package com.epam.esm.model;
 import java.io.Serializable;
 import java.util.Objects;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class UserGiftID implements Serializable {
-    private Integer idUser;
-    private Integer idGift;
-    public UserGiftID(Integer idUser, Integer idGift) {
-        this.idUser = idUser;
-        this.idGift = idGift;
-    }
-    public UserGiftID() {
-    }
+    private @Getter @Setter Integer idUser;
+    private @Getter @Setter Integer idGift;
 
     public UserGiftID(UserGiftID ugID) {
         this.idUser = ugID.getIdUser();
         this.idGift = ugID.getIdGift();
-    }
-
-    public Integer getIdUser() {
-        return idUser;
-    }
-
-    public void setIdUser(Integer id) {
-        idUser = id;
-    }
-    public Integer getIdGift() {
-        return idGift;
-    }
-
-    public void setIdGift(Integer id) {
-        idGift = id;
     }
     @Override
     public boolean equals(Object o) {

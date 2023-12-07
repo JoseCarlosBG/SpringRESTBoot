@@ -1,42 +1,29 @@
 package com.epam.esm.model;
 import jakarta.persistence.*;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+
 @Entity
 @Table(name = "GiftTag")
 @IdClass(GiftTagID.class)
 public class GiftTag {
     @Id
     @Column(name = "id_gift")
-    private Integer idGift;
-
+    private @Getter @Setter Integer idGift;
     @Id
     @Column(name = "id_tag")
-    private Integer idTag;
-    public GiftTag(Integer idGift, Integer idTag) {
-        this.idGift = idGift;
-        this.idTag = idTag;
-    }
-
-    public GiftTag() {
-    }
+    private @Getter @Setter Integer idTag;
 
     public GiftTag(GiftTag gt) {
         this.idGift = gt.getIdGift();
         this.idTag = gt.getIdTag();
-    }
-    public Integer getIdGift() {
-        return idGift;
-    }
-
-    public void setIdGift(Integer id) {
-        idGift = id;
-    }
-
-    public Integer getIdTag() {
-        return idTag;
-    }
-
-    public void setIdTag(Integer id) {
-        idTag = id;
     }
 }
