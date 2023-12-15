@@ -1,5 +1,9 @@
-package com.epam.esm.controller;
-import com.epam.esm.model.*;
+package com.epam.esm.controller.entity;
+import com.epam.esm.controller.MainController;
+import com.epam.esm.controller.error.PageNotFoundException;
+import com.epam.esm.model.entity.GiftCertificate;
+import com.epam.esm.model.entity.GiftTag;
+import com.epam.esm.model.entity.Tag;
 import com.epam.esm.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,7 +27,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 @RequestMapping("/SpringRESTBoot/gifts")
-public class GiftController extends MainController{
+public class GiftController extends MainController {
 
     @Autowired
     private GiftService giftService;

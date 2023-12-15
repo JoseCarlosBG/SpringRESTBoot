@@ -1,7 +1,7 @@
 package com.epam.esm.repo;
 
-import com.epam.esm.model.UserGift;
-import com.epam.esm.model.UserGiftID;
+import com.epam.esm.model.entity.UserGift;
+import com.epam.esm.model.entity.UserGiftID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

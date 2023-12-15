@@ -1,4 +1,4 @@
-package com.epam.esm.controller;
+package com.epam.esm.controller.error;
 
 public class ErrorResponse {
     private String errorMessage;

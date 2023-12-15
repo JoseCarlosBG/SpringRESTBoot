@@ -1,7 +1,8 @@
 package com.epam.esm;
 
 import com.epam.esm.controller.*;
-import com.epam.esm.model.*;
+import com.epam.esm.controller.entity.*;
+import com.epam.esm.model.entity.User;
 import com.epam.esm.service.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

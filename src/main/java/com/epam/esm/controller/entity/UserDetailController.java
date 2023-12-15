@@ -1,30 +1,24 @@
-package com.epam.esm.controller;
-import com.epam.esm.model.*;
+package com.epam.esm.controller.entity;
+import com.epam.esm.controller.MainController;
+import com.epam.esm.controller.error.PageNotFoundException;
+import com.epam.esm.model.entity.User;
+import com.epam.esm.model.entity.UserGift;
 import com.epam.esm.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 @RequestMapping("/SpringRESTBoot/user")
-public class UserDetailController extends MainController{
+public class UserDetailController extends MainController {
     @Autowired
     private UserService userService;
     @Autowired
@@ -75,7 +69,7 @@ public class UserDetailController extends MainController{
             links.add(linkTo(methodOn(UserDetailController.class).getUserOneGiftPageById(id, numPage - 1)).withRel("prev"));
         }
         Map<String, List<UserGift>> giftDetails = new HashMap<>();
-        giftDetails.put(user.getFirstName() + " " + user.getLastName(), listGifts);
+        giftDetails.put(user.getUserName() + " " + user.getEmail(), listGifts);
         currentUserId=id;
         EntityModel<Map<String,List<UserGift>>> userResource = EntityModel.of(giftDetails, links);
 

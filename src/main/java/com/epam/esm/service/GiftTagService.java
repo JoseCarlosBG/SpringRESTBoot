@@ -1,7 +1,7 @@
 package com.epam.esm.service;
 
-import com.epam.esm.model.GiftTag;
-import com.epam.esm.model.Tag;
+import com.epam.esm.model.entity.GiftTag;
+import com.epam.esm.model.entity.Tag;
 import com.epam.esm.repo.GiftTagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

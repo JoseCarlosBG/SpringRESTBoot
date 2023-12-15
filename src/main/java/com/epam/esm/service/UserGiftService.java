@@ -1,6 +1,6 @@
 package com.epam.esm.service;
 
-import com.epam.esm.model.UserGift;
+import com.epam.esm.model.entity.UserGift;
 import com.epam.esm.repo.UserGiftRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

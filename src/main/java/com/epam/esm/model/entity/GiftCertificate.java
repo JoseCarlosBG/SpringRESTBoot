@@ -1,4 +1,4 @@
-package com.epam.esm.model;
+package com.epam.esm.model.entity;
 
 import org.springframework.hateoas.RepresentationModel;
 import jakarta.persistence.*;

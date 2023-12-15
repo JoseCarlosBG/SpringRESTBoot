@@ -1,6 +1,6 @@
 package com.epam.esm;
 
-import com.epam.esm.model.GiftCertificate;
+import com.epam.esm.model.entity.GiftCertificate;
 import com.epam.esm.repo.GiftRepository;
 import com.epam.esm.service.GiftService;
 import org.junit.jupiter.api.BeforeEach;

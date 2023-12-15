@@ -1,8 +1,7 @@
-package com.epam.esm.model;
+package com.epam.esm.model.entity;
 
 import java.io.Serializable;
 import java.util.Objects;
-
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,13 +12,13 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class GiftTagID implements Serializable {
+public class UserGiftID implements Serializable {
+    private @Getter @Setter Integer idUser;
     private @Getter @Setter Integer idGift;
-    private @Getter @Setter Integer idTag;
 
-    public GiftTagID(GiftTagID gtID) {
-        this.idGift = gtID.getIdGift();
-        this.idTag = gtID.getIdTag();
+    public UserGiftID(UserGiftID ugID) {
+        this.idUser = ugID.getIdUser();
+        this.idGift = ugID.getIdGift();
     }
     @Override
     public boolean equals(Object o) {
@@ -29,12 +28,13 @@ public class GiftTagID implements Serializable {
         if ( o == null || getClass() != o.getClass() ) {
             return false;
         }
-        GiftTagID gt = (GiftTagID) o;
-        return Objects.equals( idGift, gt.idGift ) &&
-                Objects.equals( idTag, gt.idTag );
+        UserGiftID ug = (UserGiftID) o;
+        return Objects.equals( idUser, ug.idUser ) &&
+                Objects.equals( idGift, ug.idGift );
     }
+
     @Override
     public int hashCode() {
-        return Objects.hash( idGift, idTag );
+        return Objects.hash( idUser, idGift );
     }
 }

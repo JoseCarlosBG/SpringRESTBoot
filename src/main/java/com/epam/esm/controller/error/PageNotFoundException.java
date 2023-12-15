@@ -1,4 +1,4 @@
-package com.epam.esm.controller;
+package com.epam.esm.controller.error;
 
 public class PageNotFoundException extends RuntimeException {
     private Object requestedPageNumber;

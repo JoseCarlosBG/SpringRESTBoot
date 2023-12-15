@@ -1,6 +1,6 @@
 package com.epam.esm.service;
 
-import com.epam.esm.model.Tag;
+import com.epam.esm.model.entity.Tag;
 import com.epam.esm.repo.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

@@ -1,7 +1,8 @@
-package com.epam.esm.controller;
+package com.epam.esm.controller.entity;
 
-import com.epam.esm.model.GiftTag;
-import com.epam.esm.model.Tag;
+import com.epam.esm.controller.error.PageNotFoundException;
+import com.epam.esm.model.entity.GiftTag;
+import com.epam.esm.model.entity.Tag;
 import com.epam.esm.service.GiftTagService;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;

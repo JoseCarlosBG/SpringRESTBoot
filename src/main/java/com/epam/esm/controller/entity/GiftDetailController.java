@@ -1,30 +1,26 @@
-package com.epam.esm.controller;
+package com.epam.esm.controller.entity;
 
-import com.epam.esm.model.*;
+import com.epam.esm.controller.MainController;
+import com.epam.esm.controller.error.PageNotFoundException;
+import com.epam.esm.model.entity.GiftCertificate;
+import com.epam.esm.model.entity.GiftTag;
+import com.epam.esm.model.entity.Tag;
 import com.epam.esm.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 @RequestMapping("/SpringRESTBoot/gift")
-public class GiftDetailController extends MainController{
+public class GiftDetailController extends MainController {
     @Autowired
     private GiftService giftService;
     @Autowired

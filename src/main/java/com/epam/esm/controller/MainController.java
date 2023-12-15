@@ -1,5 +1,8 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.controller.entity.GiftController;
+import com.epam.esm.controller.entity.TagController;
+import com.epam.esm.controller.entity.UserController;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;

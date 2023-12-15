@@ -1,6 +1,6 @@
 package com.epam.esm.service;
 
-import com.epam.esm.model.GiftCertificate;
+import com.epam.esm.model.entity.GiftCertificate;
 import com.epam.esm.repo.GiftRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import java.time.LocalDateTime;
 
 @Service
 public class GiftService {
