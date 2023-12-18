@@ -92,7 +92,7 @@ public class UserController extends MainController {
         return getOneUserPage(PageRequest.of(1, 5),1);
     }
 
-    @PostMapping("/createUser")
+    @PostMapping("/create/user")
     public HttpEntity<EntityModel<User>> createUser(@RequestBody User user) {
         User savedUser = userService.createUser(user);
 
@@ -101,7 +101,7 @@ public class UserController extends MainController {
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping("/deleteUser/{id}")
+    @GetMapping("/delete/user/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable("id")  Integer id) {
         // Delete all records in UserGift with the specified id for User, then delete the User
         ugService.deleteUGByUser(id);
@@ -175,7 +175,7 @@ public class UserController extends MainController {
         return ResponseEntity.ok(mostUsedTag);
     }
 
-    @PostMapping("/saveOrder/{id}")
+    @PostMapping("/save/order/{id}")
     public ResponseEntity<EntityModel<GiftCertificate>> createCert(@RequestBody GiftCertificate gift, @PathVariable("id")  Integer id) {
         List<GiftCertificate> giftList = giftService.getAllGifts().stream().filter(t -> t.getName().equals(gift.getName())).toList();
         GiftCertificate gift1;
@@ -196,7 +196,7 @@ public class UserController extends MainController {
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping("/deleteOrder/{id}")
+    @GetMapping("/delete/order/{id}")
     public ResponseEntity<Void> deleteOrder(@PathVariable("id") Integer id) {
         ugService.deleteUGByGift(id);
         giftService.deleteGift(id);

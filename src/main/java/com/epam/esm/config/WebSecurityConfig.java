@@ -61,8 +61,12 @@ public class WebSecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/**").permitAll()
-                                .requestMatchers("/**").permitAll()
+                        auth.requestMatchers("/SpringRESTBoot/api/auth/**").permitAll()
+                                .requestMatchers("/SpringRESTBoot/**").hasAuthority("USER")
+                                .requestMatchers("/SpringRESTBoot/save/**").hasAuthority("USER")
+                                .requestMatchers("/SpringRESTBoot/create/**").hasAuthority("ADMIN")
+                                .requestMatchers("/SpringRESTBoot/update/**").hasAuthority("ADMIN")
+                                .requestMatchers("/SpringRESTBoot/delete/**").hasAuthority("ADMIN")
                                 .anyRequest().authenticated()
                 );
 

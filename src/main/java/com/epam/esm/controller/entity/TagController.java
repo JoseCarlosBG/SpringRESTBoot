@@ -91,7 +91,7 @@ public class TagController {
         return getOneTagPage(PageRequest.of(1, 10),1);
     }
 
-    @PostMapping("/saveTag/{id}")
+    @PostMapping("/create/tag/{id}")
     public HttpEntity<EntityModel<Tag>> createTag(@RequestBody Tag tag, @PathVariable("id")  Integer id) {
         List<Tag> tagList = tagService.getAllTags().stream().filter(t -> t.getName().equals(tag.getName())).toList();
         Tag tag1;
@@ -112,7 +112,7 @@ public class TagController {
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping("/deleteTag/{id}")
+    @GetMapping("/delete/tag/{id}")
     public ResponseEntity<Void> deleteTag(@PathVariable("id") Integer id) {
         gtService.deleteGTByTag(id);
         tagService.deleteTag(id);

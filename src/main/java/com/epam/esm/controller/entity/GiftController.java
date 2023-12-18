@@ -16,6 +16,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -87,7 +88,9 @@ public class GiftController extends MainController {
         return getOneGiftPage(PageRequest.of(1, 5),1);
     }
 
-    @PostMapping("/createGift")
+    //@PreAuthorize("hasRole('ADMIN')") // ROLE_ADMIN
+    //@PreAuthorize("hasAuthority('ADMIN')") // ADMIN
+    @PostMapping("/create/gift")
     public HttpEntity<EntityModel<GiftCertificate>> createGift(@RequestBody GiftCertificate giftCertificate) {
         GiftCertificate savedGift = giftService.createGift(giftCertificate);
 
@@ -95,7 +98,7 @@ public class GiftController extends MainController {
         return ResponseEntity.created(location).build();
     }
 
-    @PutMapping("/updateGift/{id}")
+    @PutMapping("/update/gift/{id}")
     public ResponseEntity<Object> updateGift(@PathVariable("id") Integer id, @RequestBody GiftCertificate updatedGiftCertificate) {
         Optional<GiftCertificate> giftOptional = Optional.of(giftService.getGiftById(id));
 
@@ -108,7 +111,7 @@ public class GiftController extends MainController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/deleteGift/{id}")
+    @GetMapping("/delete/gift/{id}")
     public ResponseEntity<Void> deleteGift(@PathVariable("id")  Integer id) {
         //Delete all records in GiftTag with the specified id for Gift Certificate, then delete the Gift Certificate
         gtService.deleteGTByGift(id);
