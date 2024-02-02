@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
-@RequestMapping("/SpringRESTBoot/gifts")
+@RequestMapping("/SpringRESTBoot/api/v1/gifts")
 public class GiftController extends MainController {
 
     @Autowired
@@ -37,7 +37,7 @@ public class GiftController extends MainController {
     private GiftTagService gtService;
     @GetMapping("/{pageNumber}")
     public ResponseEntity<CollectionModel<EntityModel<GiftCertificate>>> getOneGiftPage(@PageableDefault(size = 10, sort = "id") Pageable pageable,
-                                                                                        @PathVariable("pageNumber") Integer currentPage){
+                                                                                        @PathVariable(value = "pageNumber" ) Integer currentPage){
         Page<GiftCertificate> page;
         int numPage;
         if(currentPage <= 0){
@@ -83,14 +83,14 @@ public class GiftController extends MainController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping()
+    @GetMapping("/")
     public ResponseEntity<CollectionModel<EntityModel<GiftCertificate>>> getFirstGiftPage(){
         return getOneGiftPage(PageRequest.of(1, 5),1);
     }
 
     //@PreAuthorize("hasRole('ADMIN')") // ROLE_ADMIN
     //@PreAuthorize("hasAuthority('ADMIN')") // ADMIN
-    @PostMapping("/create/gift")
+    @PostMapping("/")
     public HttpEntity<EntityModel<GiftCertificate>> createGift(@RequestBody GiftCertificate giftCertificate) {
         GiftCertificate savedGift = giftService.createGift(giftCertificate);
 
@@ -98,7 +98,7 @@ public class GiftController extends MainController {
         return ResponseEntity.created(location).build();
     }
 
-    @PutMapping("/update/gift/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Object> updateGift(@PathVariable("id") Integer id, @RequestBody GiftCertificate updatedGiftCertificate) {
         Optional<GiftCertificate> giftOptional = Optional.of(giftService.getGiftById(id));
 
@@ -111,7 +111,7 @@ public class GiftController extends MainController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/delete/gift/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteGift(@PathVariable("id")  Integer id) {
         //Delete all records in GiftTag with the specified id for Gift Certificate, then delete the Gift Certificate
         gtService.deleteGTByGift(id);
@@ -120,13 +120,13 @@ public class GiftController extends MainController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/filterByTag/{tags}/{pageNumber}")
+    @GetMapping("/tags/{pageNumber}")
     public ResponseEntity<CollectionModel<EntityModel<GiftCertificate>>> searchGiftsByTags(
-            @PathVariable String tags,
+            @RequestParam(value="tag[]") String[] tags,
             @PathVariable int pageNumber,
             @PageableDefault(size = 5, sort = "id") Pageable pageable) {
 
-        List<String> stringList = Arrays.asList(tags.split("-"));
+        List<String> stringList = Arrays.stream(tags).toList();
         List<Tag> tagSearch = tagService.getAllTags().stream()
                 .filter(e -> stringList.contains(e.getName()))
                 .collect(Collectors.toList());
@@ -170,9 +170,9 @@ public class GiftController extends MainController {
 
         return ResponseEntity.ok(response);
     }
-    @GetMapping("/filterByTag/{tags}")
+    @GetMapping("/tags")
     public ResponseEntity<CollectionModel<EntityModel<GiftCertificate>>> searchGiftsByTags(
-            @PathVariable String tags,
+            @RequestParam(value="tag[]") String[] tags,
             @PageableDefault(size = 5, sort = "id") Pageable pageable) {
 
         // Call the method for the first page

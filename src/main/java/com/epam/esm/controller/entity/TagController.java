@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/SpringRESTBoot/tags")
+@RequestMapping("/SpringRESTBoot/api/v1/tags")
 public class TagController {
     @Autowired
     private TagService tagService;
@@ -86,12 +86,12 @@ public class TagController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping()
+    @GetMapping("/")
     public ResponseEntity<CollectionModel<EntityModel<Tag>>> getFirstTagPage(){
         return getOneTagPage(PageRequest.of(1, 10),1);
     }
 
-    @PostMapping("/create/tag/{id}")
+    @PostMapping("/{id}")
     public HttpEntity<EntityModel<Tag>> createTag(@RequestBody Tag tag, @PathVariable("id")  Integer id) {
         List<Tag> tagList = tagService.getAllTags().stream().filter(t -> t.getName().equals(tag.getName())).toList();
         Tag tag1;
@@ -112,7 +112,7 @@ public class TagController {
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping("/delete/tag/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTag(@PathVariable("id") Integer id) {
         gtService.deleteGTByTag(id);
         tagService.deleteTag(id);

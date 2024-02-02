@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
-@RequestMapping("/SpringRESTBoot/users")
+@RequestMapping("/SpringRESTBoot/api/v1/users")
 public class UserController extends MainController {
     @Autowired
     private UserService userService;
@@ -87,12 +87,12 @@ public class UserController extends MainController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping()
+    @GetMapping("/")
     public ResponseEntity<CollectionModel<EntityModel<User>>> getFirstUserPage(){
         return getOneUserPage(PageRequest.of(1, 5),1);
     }
 
-    @PostMapping("/create/user")
+    @PostMapping("/")
     public HttpEntity<EntityModel<User>> createUser(@RequestBody User user) {
         User savedUser = userService.createUser(user);
 
@@ -101,7 +101,7 @@ public class UserController extends MainController {
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping("/delete/user/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable("id")  Integer id) {
         // Delete all records in UserGift with the specified id for User, then delete the User
         ugService.deleteUGByUser(id);
@@ -110,7 +110,7 @@ public class UserController extends MainController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/userOrderInfo/{userId}/{page}")
+    @GetMapping("/orders/{userId}/{page}")
     public ResponseEntity<CollectionModel<EntityModel<Map<String, Object>>>> getUserOrderInfo(
             @PathVariable("userId") Integer userId, @PathVariable("page") Integer page,
             @PageableDefault(size = 5, sort = "id_user") Pageable pageable) {
@@ -162,12 +162,12 @@ public class UserController extends MainController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/userOrderInfo/{userId}")
+    @GetMapping("/orders/{userId}")
     public ResponseEntity<CollectionModel<EntityModel<Map<String, Object>>>> getFirstUserOrderInfo(@PathVariable("userId") Integer userId, @PageableDefault(size = 5, sort = "id_user") Pageable pageable) {
         return getUserOrderInfo(userId, 0, pageable);
     }
 
-    @GetMapping("/userMostUsedTag/{userId}")
+    @GetMapping("/tags/{userId}")
     public ResponseEntity<String> getUserMostUsedTag(@PathVariable("userId") Integer userId) {
         // Logic to retrieve the most widely used tag of the user with the highest cost of all orders
         String mostUsedTag = userService.getUserMostUsedTag(userId);
@@ -175,7 +175,7 @@ public class UserController extends MainController {
         return ResponseEntity.ok(mostUsedTag);
     }
 
-    @PostMapping("/save/order/{id}")
+    @PostMapping("/orders/{id}")
     public ResponseEntity<EntityModel<GiftCertificate>> createCert(@RequestBody GiftCertificate gift, @PathVariable("id")  Integer id) {
         List<GiftCertificate> giftList = giftService.getAllGifts().stream().filter(t -> t.getName().equals(gift.getName())).toList();
         GiftCertificate gift1;
@@ -196,7 +196,7 @@ public class UserController extends MainController {
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping("/delete/order/{id}")
+    @DeleteMapping("/orders/{id}")
     public ResponseEntity<Void> deleteOrder(@PathVariable("id") Integer id) {
         ugService.deleteUGByGift(id);
         giftService.deleteGift(id);

@@ -3,6 +3,7 @@ package com.epam.esm.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
@@ -57,18 +58,18 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/SpringRESTBoot/api/auth/**").permitAll()
-                                .requestMatchers("/SpringRESTBoot/**").hasAuthority("USER")
-                                .requestMatchers("/SpringRESTBoot/save/**").hasAuthority("USER")
-                                .requestMatchers("/SpringRESTBoot/create/**").hasAuthority("ADMIN")
-                                .requestMatchers("/SpringRESTBoot/update/**").hasAuthority("ADMIN")
-                                .requestMatchers("/SpringRESTBoot/delete/**").hasAuthority("ADMIN")
+        http.authorizeHttpRequests(auth ->
+                        auth.requestMatchers("/SpringRESTBoot/api/v1/auth/**").permitAll()
+                                .requestMatchers(HttpMethod.GET).hasAnyAuthority("USER", "ADMIN")
+                                .requestMatchers("/SpringRESTBoot/api/v1/users/**").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.POST).hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.PUT).hasAuthority("ADMIN").
+                                requestMatchers(HttpMethod.DELETE).hasAuthority("ADMIN")
                                 .anyRequest().authenticated()
-                );
+                ).exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable);
 
         http.authenticationProvider(authenticationProvider());
 
@@ -76,13 +77,17 @@ public class WebSecurityConfig {
 
         return http.build();
     }
+
+
     /*@Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
                         .anyRequest().permitAll()
                 )
-                .httpBasic(Customizer.withDefaults());
+                .httpBasic(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable);
         return http.build();
     }*/
 

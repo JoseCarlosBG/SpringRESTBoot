@@ -17,7 +17,7 @@ import java.util.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
-@RequestMapping("/SpringRESTBoot/user")
+@RequestMapping("/SpringRESTBoot/api/v1/userDetails")
 public class UserDetailController extends MainController {
     @Autowired
     private UserService userService;
