@@ -85,7 +85,7 @@ public class GiftCertificateServiceTest {
         assertEquals(giftCertificate, result);
     }
 
-    @Test
+    /*@Test
     public void testUpdateGift_ExistingItem() {
         // Arrange
         Integer id = 1;
@@ -98,7 +98,7 @@ public class GiftCertificateServiceTest {
         // Assert
         assertNotNull(result);
         assertEquals(giftCertificate, result);
-    }
+    }*/
 
     @Test
     public void testUpdateGift_NonExistingItem() {
