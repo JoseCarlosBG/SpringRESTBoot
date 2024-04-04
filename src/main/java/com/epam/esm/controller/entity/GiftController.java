@@ -36,6 +36,7 @@ public class GiftController extends MainController {
     @Autowired
     private GiftTagService gtService;
     @GetMapping("/{pageNumber}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<CollectionModel<EntityModel<GiftCertificate>>> getOneGiftPage(@PageableDefault(size = 10, sort = "id") Pageable pageable,
                                                                                         @PathVariable(value = "pageNumber" ) Integer currentPage){
         Page<GiftCertificate> page;

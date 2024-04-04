@@ -23,6 +23,9 @@ import com.epam.esm.config.AuthEntryPointJwt;
 import com.epam.esm.service.UserDetailsImpl;
 import com.epam.esm.service.UserDetailsServiceImpl;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -59,21 +62,21 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/SpringRESTBoot/api/v1/auth/**").permitAll()
+                        /*auth.requestMatchers("/SpringRESTBoot/api/v1/auth/**").permitAll()
                                 .requestMatchers(HttpMethod.GET).hasAnyAuthority("USER", "ADMIN")
                                 .requestMatchers("/SpringRESTBoot/api/v1/users/**").hasAuthority("ADMIN")
                                 .requestMatchers(HttpMethod.POST).hasAuthority("ADMIN")
                                 .requestMatchers(HttpMethod.PUT).hasAuthority("ADMIN").
                                 requestMatchers(HttpMethod.DELETE).hasAuthority("ADMIN")
-                                .anyRequest().authenticated()
+                                .anyRequest().authenticated()*/
+                        auth.anyRequest().permitAll()
                 ).exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable);
+                .csrf(AbstractHttpConfigurer::disable);
 
-        http.authenticationProvider(authenticationProvider());
+        //http.authenticationProvider(authenticationProvider());
 
-        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+        //http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -103,4 +106,15 @@ public class WebSecurityConfig {
         return new InMemoryUserDetailsManager(user);
     }
 
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("http://localhost:3000"); // Adjust with your React app URL
+        configuration.addAllowedMethod("*"); // You can add specific HTTP methods if needed
+        configuration.addAllowedHeader("*"); // You can add specific headers if needed
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 }
