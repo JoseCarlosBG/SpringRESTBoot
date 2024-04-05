@@ -1,0 +1,181 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
+
+body {
+    background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+	color: white;
+}
+
+header {
+    position: fixed;
+    top: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+    width: 100%;
+    background-color: white;
+    padding: 0 20px;
+    box-sizing: border-box;
+    color: black;
+}
+
+.menu-logo, .search-box, .auth-buttons {
+    display: flex;
+    align-items: center;
+}
+
+.menu-logo{
+		background-color: white;
+		color: black;
+}
+
+.menu-icon {
+    margin-right: 10px;
+    color: black;
+}
+
+.search-box input {
+    font-family: 'Roboto', sans-serif; /* Apply the 'Roboto' font */
+    font-size: 16px; /* Increase the font size */
+    height: 30px; /* Increase the height of the input box */
+    width: 200px; /* Increase the width of the input box */
+    border-radius: 0; /* Remove the rounded corners */
+    padding: px; /* Add some padding */
+    margin-left: 50px; /* Add left margin */
+}
+.search-box select {
+    font-family: 'Roboto', sans-serif; /* Apply the 'Roboto' font */
+    font-size: 12px; /* Match the font size */
+    height: 35px; /* Match the height */
+    width: 100px; /* Match the width */
+    border-radius: 0; /* Remove the rounded corners */
+    padding: 0px; /* Add some padding */
+}
+.icons {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.heart-icon, .cart-icon {
+    font-size: 20px;
+    margin-right: 5px;
+	color: grey;
+}
+.auth-buttons button {
+    font-family: 'Roboto', sans-serif; /* Apply the 'Roboto' font */
+    font-size: 12px; /* Increase the font size */
+    height: 40px; /* Increase the height of the button */
+    width: 100px; /* Increase the width of the button */
+    padding: 10px; /* Add some padding */
+}
+
+.logo-header {
+    position: absolute;
+    top: -50px;
+    width: 100px;
+    height: 100px;
+    background-color: lightgrey;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+
+.register-box {
+	float: right;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    width: 300px;
+    height: 300px;
+    padding: 20px;
+    box-sizing: border-box;
+    position: relative;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(0,0,0,0.1);
+}
+
+.register-box input {
+ font-family: 'Roboto', sans-serif; /* Apply the 'Roboto' font */
+    font-size: 12px; /* Increase the font size */
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.register-box .register {
+ font-family: 'Roboto', sans-serif; /* Apply the 'Roboto' font */
+    font-size: 12px; /* Increase the font size */
+    background-color: #007BFF;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.registerbox {
+	margin: 0 auto; /* center the fieldset horizontally */ 
+	padding: 1em; /* add some padding around the fieldset */ 
+	background-color: white;
+	display: flex-direction;
+	justify-content: center;
+	align-items: center;
+	color: black;
+	max-width: 30%;
+	margin: auto;
+	height: 90%;
+}
+.section_reg {
+	background-color: gray;
+	height: 400px;
+	justify-content: center;
+	max-width: 100%;
+	margin: auto;
+}
+
+.grid-header { grid-area: header; background-color: grey; color: white;}
+.grid-user { grid-area: user;}
+.grid-name { grid-area: name; }
+.grid-pass { grid-area: password; }
+.grid-repeat { grid-area: repeat; }
+.grid-email { grid-area: email; }
+.grid-address { grid-area: address; }
+.grid-empty { grid-area: empty; }
+.grid-buttons { grid-area: buttons; }
+
+.grid-register {
+  display: grid;
+  grid-template-areas:
+	'header header'
+    'user name'
+    'password repeat'
+    'email address'
+	'empty buttons';
+  gap: 10px;
+  padding: 10px;
+  color: black;
+}
+.btn {
+font-family: 'Roboto', sans-serif; /* Apply the 'Roboto' font */
+    font-size: 12px; /* Increase the font size */
+    height: 40px; /* Increase the height of the button */
+    width: 70px; /* Increase the width of the button */
+    padding: 10px; /* Add some padding */
+}
+
+.btn-sm {
+	padding: 6px 10px;
+	vertical-align: middle;
+}

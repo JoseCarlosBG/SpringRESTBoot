@@ -1,0 +1,291 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
+
+:root {
+  --nav-height: 60px;
+  --header-height: 100px;
+}
+
+body {
+    background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    color: white;
+}
+
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: var(--nav-height);
+  width: 100%;
+  background-color: white;
+  padding: 0 20px;
+  box-sizing: border-box;
+  color: black;
+}
+
+.header {
+  position: fixed;
+  margin-top: calc(var(--nav-height)); /* Adjust the padding as needed */
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: var(--header-height);
+  width: 100%;
+  background-color: grey;
+  padding: 0 20px;
+  box-sizing: border-box;
+  color: white;
+}
+
+.menu-logo, .search-box, .auth-buttons {
+    display: flex;
+    align-items: center;
+}
+
+.menu-logo {
+    background-color: white;
+    color: black;
+}
+
+.menu-icon {
+    margin-right: 10px;
+    color: black;
+}
+
+.search-box input {
+    font-family: 'Roboto', sans-serif; /* Apply the 'Roboto' font */
+    font-size: 16px; /* Increase the font size */
+    height: 30px; /* Increase the height of the input box */
+    width: 200px; /* Increase the width of the input box */
+    border-radius: 0; /* Remove the rounded corners */
+    padding: px; /* Add some padding */
+    margin-left: 50px; /* Add left margin */
+}
+
+.search-box select {
+    font-family: 'Roboto', sans-serif; /* Apply the 'Roboto' font */
+    font-size: 12px; /* Match the font size */
+    height: 35px; /* Match the height */
+    width: 100px; /* Match the width */
+    border-radius: 0; /* Remove the rounded corners */
+    padding: 0px; /* Add some padding */
+}
+
+.icons {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.heart-icon, .cart-icon {
+    font-size: 20px;
+    margin-right: 5px;
+    color: grey;
+}
+
+.auth-buttons button {
+    font-family: 'Roboto', sans-serif; /* Apply the 'Roboto' font */
+    font-size: 12px; /* Increase the font size */
+    height: 40px; /* Increase the height of the button */
+    width: 100px; /* Increase the width of the button */
+    padding: 10px; /* Add some padding */
+}
+
+.login-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    width: 300px;
+    height: 300px;
+    padding: 20px;
+    box-sizing: border-box;
+    position: relative;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(0,0,0,0.1);
+}
+
+.logo-circle {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background-color: lightgrey;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-box input {
+    font-family: 'Roboto', sans-serif; /* Apply the 'Roboto' font */
+    font-size: 12px; /* Increase the font size */
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.login-box .login {
+    font-family: 'Roboto', sans-serif; /* Apply the 'Roboto' font */
+    font-size: 12px; /* Increase the font size */
+    background-color: #007BFF;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.product-list-container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    background-color: lightgrey;
+    top: 0;
+    margin-top: calc(var(--nav-height) + var(--header-height) + 80px); /* Adjust the padding as needed */
+    padding-top: calc(var(--nav-height) + var(--header-height) + 10px); /* Add some padding to separate the product list from the header */
+    clear: both;
+}
+
+.product-list {
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 10px;
+    box-sizing: border-box;
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    color:black;
+}
+
+.product-card {
+    position: static;
+    width: 20%;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    box-sizing: border-box;
+    background-color:white;
+    color: black;
+    clear: both;
+}
+
+.image {
+    width: 10%;
+    background-color: grey;
+    justify-content: start;
+}
+
+.details {
+    width: 70%;
+    justify-content: center;
+    padding: 1px;
+}
+
+.price {
+    width: 100%;
+    text-align: right;
+}
+
+.blank {
+    width: 10%;
+    justify-content: start;
+}
+
+.total {
+    width: 70%;
+    text-align: right;
+    padding: 1px;
+}
+
+.checkoutbox {
+    width: 60%;
+}
+
+.align-right {
+    padding: 10px 0;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.scrollBt {
+    justify-content: flex-end;
+}
+
+.navigation-buttons {
+    margin-top: 20px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+}
+
+.navigation-buttons button {
+    margin-right: 10px;
+    font-size: 16px;
+    padding: 8px 16px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.navigation-buttons button:hover {
+    background-color: #0056b3;
+}
+
+/* Modal styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    padding-top: 60px; /* Location of the box */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.modal-actions button {
+    margin-left: 10px;
+}
