@@ -24,6 +24,7 @@ public class UserDetailController extends MainController {
     @Autowired
     private UserGiftService ugService;
     @GetMapping("/{id}/{page}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<EntityModel<Map<String,List<UserGift>>>> getUserOneGiftPageById(@PathVariable("id") Integer id, @PathVariable("page") Integer currentPage) {
         User user= userService.getUserById(id);
         if (user==null){
@@ -79,6 +80,7 @@ public class UserDetailController extends MainController {
     }
 
     @GetMapping("/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<EntityModel<Map<String,List<UserGift>>>> getUserFirstTagPageById(@PathVariable("id") Integer id){
         return getUserOneGiftPageById(id, 1);
     }

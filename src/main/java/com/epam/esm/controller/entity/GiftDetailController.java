@@ -28,6 +28,7 @@ public class GiftDetailController extends MainController {
     @Autowired
     private GiftTagService gtService;
     @GetMapping("/{id}/{page}")
+    @CrossOrigin(origins = "http://localhost:3000")
     ResponseEntity<EntityModel<Map<String,List<Tag>>>> getGiftOneTagPageById(@PathVariable("id") Integer id, @PathVariable("page") Integer currentPage) {
         GiftCertificate gift= giftService.getGiftById(id);
         if (gift==null){
@@ -81,6 +82,7 @@ public class GiftDetailController extends MainController {
         return ResponseEntity.ok(giftResource);
     }
     @GetMapping("/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<EntityModel<Map<String,List<Tag>>>> getGiftFirstTagPageById(@PathVariable("id") Integer id){
         return getGiftOneTagPageById(id, 1);
     }

@@ -38,6 +38,7 @@ public class UserController extends MainController {
     private GiftTagService gtService;
 
     @GetMapping("/{pageNumber}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<CollectionModel<EntityModel<User>>> getOneUserPage(@PageableDefault(size = 10, sort = "id") Pageable pageable,
                                                                              @PathVariable("pageNumber") Integer currentPage) {
         Page<User> page;
@@ -88,11 +89,13 @@ public class UserController extends MainController {
     }
 
     @GetMapping("/")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<CollectionModel<EntityModel<User>>> getFirstUserPage(){
         return getOneUserPage(PageRequest.of(1, 5),1);
     }
 
     @PostMapping("/")
+    @CrossOrigin(origins = "http://localhost:3000")
     public HttpEntity<EntityModel<User>> createUser(@RequestBody User user) {
         User savedUser = userService.createUser(user);
 
@@ -102,6 +105,7 @@ public class UserController extends MainController {
     }
 
     @DeleteMapping("/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<Void> deleteUser(@PathVariable("id")  Integer id) {
         // Delete all records in UserGift with the specified id for User, then delete the User
         ugService.deleteUGByUser(id);
@@ -111,6 +115,7 @@ public class UserController extends MainController {
     }
 
     @GetMapping("/orders/{userId}/{page}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<CollectionModel<EntityModel<Map<String, Object>>>> getUserOrderInfo(
             @PathVariable("userId") Integer userId, @PathVariable("page") Integer page,
             @PageableDefault(size = 5, sort = "id_user") Pageable pageable) {
@@ -168,6 +173,7 @@ public class UserController extends MainController {
     }
 
     @GetMapping("/tags/{userId}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<String> getUserMostUsedTag(@PathVariable("userId") Integer userId) {
         // Logic to retrieve the most widely used tag of the user with the highest cost of all orders
         String mostUsedTag = userService.getUserMostUsedTag(userId);
@@ -176,6 +182,7 @@ public class UserController extends MainController {
     }
 
     @PostMapping("/orders/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<EntityModel<GiftCertificate>> createCert(@RequestBody GiftCertificate gift, @PathVariable("id")  Integer id) {
         List<GiftCertificate> giftList = giftService.getAllGifts().stream().filter(t -> t.getName().equals(gift.getName())).toList();
         GiftCertificate gift1;
@@ -197,6 +204,7 @@ public class UserController extends MainController {
     }
 
     @DeleteMapping("/orders/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<Void> deleteOrder(@PathVariable("id") Integer id) {
         ugService.deleteUGByGift(id);
         giftService.deleteGift(id);

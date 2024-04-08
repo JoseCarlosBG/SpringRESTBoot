@@ -16,4 +16,6 @@ public interface GiftRepository extends JpaRepository<GiftCertificate, Integer> 
             "JOIN GiftTag gt ON g.id = gt.idGift " +
             "WHERE gt.idTag IN :tagIds")
     Page<GiftCertificate> findByGiftTags_IdTagIn(@Param("tagIds") Set<Integer> tagIds, Pageable pageable);
+
+    Page<GiftCertificate> findByNameContaining(String namePattern, Pageable pageable);
 }

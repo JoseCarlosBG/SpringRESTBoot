@@ -57,4 +57,9 @@ public class GiftService {
         Set<Integer> uniqueTagIds = tagIds.stream().collect(Collectors.toSet());
         return giftRepository.findByGiftTags_IdTagIn(uniqueTagIds, pageable);
     }
+
+    public Page<GiftCertificate> findGiftsByNameContaining(String namePattern, int pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber - 1,5);
+        return giftRepository.findByNameContaining(namePattern, pageable);
+    }
 }

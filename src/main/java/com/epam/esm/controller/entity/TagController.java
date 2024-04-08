@@ -34,6 +34,7 @@ public class TagController {
     @Autowired
     private GiftTagService gtService;
     @GetMapping("/{pageNumber}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<CollectionModel<EntityModel<Tag>>> getOneTagPage(@PageableDefault(size = 10, sort = "id") Pageable pageable,
                                                                            @PathVariable("pageNumber") Integer currentPage){
 
@@ -87,11 +88,13 @@ public class TagController {
     }
 
     @GetMapping("/")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<CollectionModel<EntityModel<Tag>>> getFirstTagPage(){
         return getOneTagPage(PageRequest.of(1, 10),1);
     }
 
     @PostMapping("/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public HttpEntity<EntityModel<Tag>> createTag(@RequestBody Tag tag, @PathVariable("id")  Integer id) {
         List<Tag> tagList = tagService.getAllTags().stream().filter(t -> t.getName().equals(tag.getName())).toList();
         Tag tag1;
@@ -113,6 +116,7 @@ public class TagController {
     }
 
     @DeleteMapping("/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<Void> deleteTag(@PathVariable("id") Integer id) {
         gtService.deleteGTByTag(id);
         tagService.deleteTag(id);

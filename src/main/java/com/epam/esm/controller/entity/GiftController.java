@@ -85,6 +85,7 @@ public class GiftController extends MainController {
     }
 
     @GetMapping("/")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<CollectionModel<EntityModel<GiftCertificate>>> getFirstGiftPage(){
         return getOneGiftPage(PageRequest.of(1, 5),1);
     }
@@ -92,6 +93,7 @@ public class GiftController extends MainController {
     //@PreAuthorize("hasRole('ADMIN')") // ROLE_ADMIN
     //@PreAuthorize("hasAuthority('ADMIN')") // ADMIN
     @PostMapping("/")
+    @CrossOrigin(origins = "http://localhost:3000")
     public HttpEntity<EntityModel<GiftCertificate>> createGift(@RequestBody GiftCertificate giftCertificate) {
         GiftCertificate savedGift = giftService.createGift(giftCertificate);
 
@@ -100,6 +102,7 @@ public class GiftController extends MainController {
     }
 
     @PutMapping("/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<Object> updateGift(@PathVariable("id") Integer id, @RequestBody GiftCertificate updatedGiftCertificate) {
         Optional<GiftCertificate> giftOptional = Optional.of(giftService.getGiftById(id));
 
@@ -113,6 +116,7 @@ public class GiftController extends MainController {
     }
 
     @DeleteMapping("/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<Void> deleteGift(@PathVariable("id")  Integer id) {
         //Delete all records in GiftTag with the specified id for Gift Certificate, then delete the Gift Certificate
         gtService.deleteGTByGift(id);
@@ -122,6 +126,7 @@ public class GiftController extends MainController {
     }
 
     @GetMapping("/tags/{pageNumber}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<CollectionModel<EntityModel<GiftCertificate>>> searchGiftsByTags(
             @RequestParam(value="tag[]") String[] tags,
             @PathVariable int pageNumber,
@@ -172,6 +177,7 @@ public class GiftController extends MainController {
         return ResponseEntity.ok(response);
     }
     @GetMapping("/tags")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<CollectionModel<EntityModel<GiftCertificate>>> searchGiftsByTags(
             @RequestParam(value="tag[]") String[] tags,
             @PageableDefault(size = 5, sort = "id") Pageable pageable) {
@@ -179,4 +185,60 @@ public class GiftController extends MainController {
         // Call the method for the first page
         return searchGiftsByTags(tags, 0, pageable);
     }
+
+    @GetMapping("/searchByName/{name}/{pageNumber}")
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<CollectionModel<EntityModel<GiftCertificate>>> searchGiftsByName(
+            @PathVariable String name,
+            @PathVariable(value = "pageNumber" ) Integer currentPage,
+            @PageableDefault(size = 5, sort = "id") Pageable pageable) {
+
+        Page<GiftCertificate> page;
+        int numPage;
+        if(currentPage <= 0){
+            throw new PageNotFoundException("Page not found", currentPage);
+        } else {
+            numPage = currentPage;
+        }
+        page = giftService.findPage(currentPage);
+
+        int totalPages = page.getTotalPages();
+        if (totalPages < currentPage){
+            throw new PageNotFoundException("Page not found", currentPage);
+        }
+        List<GiftCertificate> gifts = page.getContent().stream()
+                .filter(e -> name.contains(e.getName()))
+                .toList();
+        List<Link> links = new ArrayList<>();
+
+
+        // Self link
+        links.add(WebMvcLinkBuilder.linkTo(methodOn(GiftController.class).searchGiftsByName(name, numPage, pageable)).withSelfRel());
+
+        // First page link
+        links.add(WebMvcLinkBuilder.linkTo(methodOn(GiftController.class).searchGiftsByName(name,1,PageRequest.of(1, pageable.getPageSize(), pageable.getSort()))).withRel("first"));
+
+        // Last page link
+        links.add(WebMvcLinkBuilder.linkTo(methodOn(GiftController.class).searchGiftsByName(name,1,PageRequest.of(totalPages - 1, pageable.getPageSize(), pageable.getSort()))).withRel("last"));
+
+        // Next page link
+        if (page.hasNext()) {
+            links.add(WebMvcLinkBuilder.linkTo(methodOn(GiftController.class).searchGiftsByName(name,numPage + 1, page.nextPageable())).withRel("next"));
+        }
+
+        // Previous page link
+        if (page.hasPrevious()) {
+            links.add(WebMvcLinkBuilder.linkTo(methodOn(GiftController.class).searchGiftsByName(name,numPage - 1, page.previousPageable())).withRel("prev"));
+        }
+
+        List<EntityModel<GiftCertificate>> giftResources = gifts.stream()
+                .map(gift -> EntityModel.of(gift,
+                        WebMvcLinkBuilder.linkTo(methodOn(GiftDetailController.class).getGiftOneTagPageById(gift.getId(), numPage)).withSelfRel()))
+                .collect(Collectors.toList());
+
+        CollectionModel<EntityModel<GiftCertificate>> response = CollectionModel.of(giftResources, links);
+
+        return ResponseEntity.ok(response);
+    }
+
 }
