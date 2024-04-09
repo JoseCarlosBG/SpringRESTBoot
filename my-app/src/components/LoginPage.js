@@ -35,6 +35,7 @@ const LoginPage = ({ onLogin }) => {
                 username,
                 password
             });
+		console.log (response.data);
             const authToken = response.data.token;
             onLogin(authToken);
             console.log('Login successful');

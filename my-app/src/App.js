@@ -20,6 +20,39 @@ const App = () => {
     const [password, setPassword] = useState('');
     const [products, setProducts] = useState([]);
     const [showAddCouponPage, setShowAddCouponPage] = useState(false);
+    const [searchResults, setSearchResults] = useState(null); // State to store search results
+    const [searchTerm, setSearchTerm] = useState('');
+    const [totalPages, setTotalPages] = useState(1);
+    const [paginationLinks, setPaginationLinks] = useState([]);
+    
+    const fetchProducts = async (pageNumber) => {
+    try {
+        let url;
+        if (searchTerm) {
+            // If searchTerm exists, fetch products with searchTerm
+            url = `http://localhost:8080/SpringRESTBoot/api/v1/gifts/searchByName/${searchTerm}/${pageNumber}`;
+        } else {
+            // If searchTerm is empty or null, fetch products without searchTerm
+            url = `http://localhost:8080/SpringRESTBoot/api/v1/gifts/${pageNumber}`;
+        }
+        
+        const response = await axios.get(url);
+        const responseData = response.data;
+
+        if (!responseData || !responseData.giftResources || !responseData.totalPages || !responseData.links) {
+            throw new Error('Invalid response structure');
+        }
+
+        const { giftResources, totalPages, links } = responseData;
+
+        setProducts(giftResources);
+        setTotalPages(totalPages);
+        setPaginationLinks(links);
+    } catch (error) {
+        console.error('Error fetching products:', error);
+    }
+    };
+
 
 
     useEffect(() => {
@@ -48,16 +81,35 @@ const App = () => {
         }
     }, [location.pathname]);
 
-    const handleSearchInput = (event) => {
-        // Implement search functionality if needed
-    };
+    // Function to handle search
+const handleSearch = async (searchTerm) => {
+    try {
+        // Send a request to your backend to search for products based on the provided search term
+        // Replace 'http://localhost:8080' with your backend URL
+        const response = await axios.get(`http://localhost:8080/SpringRESTBoot/api/v1/gifts/searchByName/${searchTerm}/1`);
 
-    const scrollToTop = () => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    };
+        // Assuming your backend returns the search results in the response data
+        const searchResults = response.data;
+        //console.log(response.data);
+
+        // Update the state with the search results
+        setSearchResults(searchResults);
+    } catch (error) {
+        // Handle search error
+        console.error('Search failed:', error.response.data.message);
+    }
+};
+
+// Function to handle search input change
+const handleSearchInputChange = (event) => {    setSearchTerm(event.target.value); // Update searchTerm state variable
+};
+
+// Function to handle search form submit
+const handleSearchSubmit = (event) => {
+    event.preventDefault();
+    // Call handleSearch with the current value of searchTerm
+    handleSearch(searchTerm);
+};
 
     const handleLogin = async () => {
         try {
@@ -91,28 +143,35 @@ const App = () => {
         setIsLoggedIn(false);
     };
 
-    const renderPage = () => {
-        switch (currentPage) {
-            case 'add':
-                return <Add />;
-            case 'checkout':
-                return <CheckoutPage />;
-            case 'details':
-                return <DetailsPage />;
-            case 'register':
-                return <RegisterPage />;
-            case 'certificates':
-                return <Product products={products} onToggleAddCoupon={() => setShowAddCouponPage(!showAddCouponPage)} />
-	    case 'login':
-                return <LoginPage onLogin={handleLogin} />;
-            default:
-                return <LoginPage onLogin={handleLogin} />;
-        }
+    const scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
     };
+
+    const renderPage = () => {
+    switch (currentPage) {
+        case 'add':
+            return <Add />;
+        case 'checkout':
+            return <CheckoutPage />;
+        case 'details':
+            return <DetailsPage />;
+        case 'register':
+            return <RegisterPage />;
+        case 'certificates':
+            return <Product products={searchResults || []} fetchProducts={fetchProducts} searchTerm={searchTerm} />;
+        case 'login':
+            return <LoginPage onLogin={handleLogin} />;
+        default:
+            return <LoginPage onLogin={handleLogin} />;
+    }
+};
 
     return (
         <div>
-            <Header isLoggedIn={isLoggedIn} onLogout={handleLogout} />
+            <Header isLoggedIn={isLoggedIn} onLogout={handleLogout} onSearch={handleSearch} searchTerm={searchTerm} handleSearchInputChange={handleSearchInputChange} handleSearchSubmit={handleSearchSubmit} />
             {renderPage()}
         </div>
     );

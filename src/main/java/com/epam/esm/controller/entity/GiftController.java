@@ -16,7 +16,6 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -37,11 +36,13 @@ public class GiftController extends MainController {
     private GiftTagService gtService;
     @GetMapping("/{pageNumber}")
     @CrossOrigin(origins = "http://localhost:3000")
-    public ResponseEntity<CollectionModel<EntityModel<GiftCertificate>>> getOneGiftPage(@PageableDefault(size = 10, sort = "id") Pageable pageable,
-                                                                                        @PathVariable(value = "pageNumber" ) Integer currentPage){
+    public ResponseEntity<Map<String, Object>> getOneGiftPage(
+            @PageableDefault(size = 10, sort = "id") Pageable pageable,
+            @PathVariable(value = "pageNumber") Integer currentPage) {
+
         Page<GiftCertificate> page;
         int numPage;
-        if(currentPage <= 0){
+        if (currentPage <= 0) {
             throw new PageNotFoundException("Page not found", currentPage);
         } else {
             numPage = currentPage;
@@ -49,10 +50,16 @@ public class GiftController extends MainController {
         page = giftService.findPage(currentPage);
 
         int totalPages = page.getTotalPages();
-        if (totalPages < currentPage){
+        if (totalPages < currentPage) {
             throw new PageNotFoundException("Page not found", currentPage);
         }
         List<GiftCertificate> gifts = page.getContent();
+
+        List<EntityModel<GiftCertificate>> giftResources = gifts.stream()
+                .map(gift -> EntityModel.of(gift,
+                        WebMvcLinkBuilder.linkTo(methodOn(GiftDetailController.class).getGiftOneTagPageById(gift.getId(), numPage)).withSelfRel()))
+                .collect(Collectors.toList());
+
         List<Link> links = new ArrayList<>();
 
         // Self link
@@ -71,22 +78,22 @@ public class GiftController extends MainController {
 
         // Previous page link
         if (page.hasPrevious()) {
-            links.add(WebMvcLinkBuilder.linkTo(methodOn(GiftController.class).getOneGiftPage(page.previousPageable(),numPage -1)).withRel("prev"));
+            links.add(WebMvcLinkBuilder.linkTo(methodOn(GiftController.class).getOneGiftPage(page.previousPageable(), numPage - 1)).withRel("prev"));
         }
-
-        List<EntityModel<GiftCertificate>> giftResources = gifts.stream()
-                .map(gift -> EntityModel.of(gift,
-                        WebMvcLinkBuilder.linkTo(methodOn(GiftDetailController.class).getGiftOneTagPageById(gift.getId(), numPage)).withSelfRel()))
-                .collect(Collectors.toList());
 
         CollectionModel<EntityModel<GiftCertificate>> response = CollectionModel.of(giftResources, links);
 
-        return ResponseEntity.ok(response);
+        // Create a map to hold the response body
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("giftResources", giftResources);
+        responseBody.put("totalPages", totalPages);
+        responseBody.put("links", links);
+        return ResponseEntity.ok(responseBody);
     }
 
     @GetMapping("/")
     @CrossOrigin(origins = "http://localhost:3000")
-    public ResponseEntity<CollectionModel<EntityModel<GiftCertificate>>> getFirstGiftPage(){
+    public ResponseEntity<Map<String, Object>> getFirstGiftPage(){
         return getOneGiftPage(PageRequest.of(1, 5),1);
     }
 
@@ -188,7 +195,7 @@ public class GiftController extends MainController {
 
     @GetMapping("/searchByName/{name}/{pageNumber}")
     @CrossOrigin(origins = "http://localhost:3000")
-    public ResponseEntity<CollectionModel<EntityModel<GiftCertificate>>> searchGiftsByName(
+    public ResponseEntity<Map<String, Object>> searchGiftsByName(
             @PathVariable String name,
             @PathVariable(value = "pageNumber" ) Integer currentPage,
             @PageableDefault(size = 5, sort = "id") Pageable pageable) {
@@ -200,15 +207,14 @@ public class GiftController extends MainController {
         } else {
             numPage = currentPage;
         }
-        page = giftService.findPage(currentPage);
+        page = giftService.findGiftsByNameContaining(name, currentPage);
 
         int totalPages = page.getTotalPages();
+
         if (totalPages < currentPage){
             throw new PageNotFoundException("Page not found", currentPage);
         }
-        List<GiftCertificate> gifts = page.getContent().stream()
-                .filter(e -> name.contains(e.getName()))
-                .toList();
+        List<GiftCertificate> gifts = page.getContent();
         List<Link> links = new ArrayList<>();
 
 
@@ -219,7 +225,7 @@ public class GiftController extends MainController {
         links.add(WebMvcLinkBuilder.linkTo(methodOn(GiftController.class).searchGiftsByName(name,1,PageRequest.of(1, pageable.getPageSize(), pageable.getSort()))).withRel("first"));
 
         // Last page link
-        links.add(WebMvcLinkBuilder.linkTo(methodOn(GiftController.class).searchGiftsByName(name,1,PageRequest.of(totalPages - 1, pageable.getPageSize(), pageable.getSort()))).withRel("last"));
+        links.add(WebMvcLinkBuilder.linkTo(methodOn(GiftController.class).searchGiftsByName(name,totalPages,PageRequest.of(totalPages - 1, pageable.getPageSize(), pageable.getSort()))).withRel("last"));
 
         // Next page link
         if (page.hasNext()) {
@@ -238,7 +244,13 @@ public class GiftController extends MainController {
 
         CollectionModel<EntityModel<GiftCertificate>> response = CollectionModel.of(giftResources, links);
 
-        return ResponseEntity.ok(response);
+        // Create a map to hold the response body
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("giftResources", giftResources);
+        responseBody.put("totalPages", totalPages);
+        responseBody.put("links", links);
+        return ResponseEntity.ok(responseBody);
     }
+
 
 }

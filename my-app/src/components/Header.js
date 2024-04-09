@@ -1,26 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './styles/main.css';
 
-const Header = ({ isLoggedIn, onLogout }) => {
+const Header = ({ isLoggedIn, onLogout, onSearch, searchTerm, handleSearchInputChange, handleSearchSubmit }) => {
+    const [selectedCategory, setSelectedCategory] = useState('');
+
     const handleLogoutClick = () => {
         onLogout();
     };
 
+    
     return (
         <header className="nav">
             <div className="menu-logo">
                 <div className="menu-icon">&#9776;</div>
                 <div className="logo">Logo</div>
             </div>
-            <div className="search-box">
-                <input type="text" id="searchInput" placeholder="Search..." />
-                <select>
-                    <option value="" disabled selected>All categories</option>
-                    <option>Category 1</option>
-                    <option>Category 2</option>
-                    <option>Category 3</option>
+            <form className="search-box" onSubmit={handleSearchSubmit}>
+                <input type="text" id="searchInput" placeholder="Search..." value={searchTerm} onChange={handleSearchInputChange} />
+                <select value={selectedCategory} onChange={(event) => setSelectedCategory(event.target.value)}>
+                    <option value="">All categories</option>
+                    <option value="Category 1">Category 1</option>
+                    <option value="Category 2">Category 2</option>
+                    <option value="Category 3">Category 3</option>
                 </select>
-            </div>
+                <button type="submit">Search</button>
+            </form>
             <div className="auth-buttons">
                 <div className="icons">
                     <span className="heart-icon">&#10084;</span>

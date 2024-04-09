@@ -21,6 +21,7 @@ public class MainController {
     //Constants containing the common endpoints for the methods defined
     public static Integer currentUserId=0; //to keep track of our current User ID, in order to correctly add the records
     @GetMapping("/main")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<EntityModel<Map<String, Object>>> mainPage() {
         Map<String, Object> mainPageInfo = new HashMap<>();
         mainPageInfo.put("message", "Welcome to the main page!");

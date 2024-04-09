@@ -52,6 +52,7 @@ public class AuthController {
     JwtUtils jwtUtils;
 
     @PostMapping("/login")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager
@@ -69,6 +70,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         if (userRepository.existsByUserName(signUpRequest.getUsername())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
