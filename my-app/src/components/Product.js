@@ -54,16 +54,25 @@ const Product = ({ productList, searchTerm }) => {
 
     const handleEdit = (product) => {
         setEditedProduct(product);
+	fetchProducts(currentPage); // Refresh product list
     };
 
     const handleDelete = async (id) => {
-        try {
-            await axios.delete(`http://localhost:8080/SpringRESTBoot/api/v1/gifts/${id}`);
-            fetchProducts(); // Refresh product list
-        } catch (error) {
-            console.error('Error deleting product:', error);
+        const confirmDelete = window.confirm('Are you sure you want to delete this product?');
+        if (confirmDelete) {
+            try {
+                await axios.delete(`http://localhost:8080/SpringRESTBoot/api/v1/gifts/${id}`);
+		if (currentPage > totalPages - 1) {
+                	// If so, set the current page to the last page
+                	setCurrentPage(totalPages - 1);
+            	}
+		fetchProducts(currentPage); // Refresh product list
+            } catch (error) {
+                console.error('Error deleting product:', error);
+            }
         }
     };
+
 
     const handleFormInputChange = (e) => {
         const { name, value } = e.target;
@@ -72,12 +81,17 @@ const Product = ({ productList, searchTerm }) => {
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
+	const parsedPrice = parseFloat(editedProduct.price);
+    	if (isNaN(parsedPrice) || parsedPrice <= 0) {
+            console.error('Invalid price entered');
+            return;
+    	}
         try {
             const response = await axios.put(`http://localhost:8080/SpringRESTBoot/api/v1/gifts/${editedProduct.id}`, editedProduct);
             if (response.status === 204) {
                 // Update successful
                 setEditedProduct(null);
-                fetchProducts(); // Refresh product list
+                fetchProducts(currentPage); // Refresh product list
             }
         } catch (error) {
             console.error('Error updating product:', error);
@@ -85,7 +99,12 @@ const Product = ({ productList, searchTerm }) => {
     };
 
     const handleAddNew = async () => {
-        try {
+        const parsedPrice = parseFloat(formData.price);
+    	if (isNaN(parsedPrice) || parsedPrice <= 0) {
+            console.error('Invalid price entered');
+            return;
+    	}
+	try {
             const response = await axios.post('http://localhost:8080/SpringRESTBoot/api/v1/gifts/', formData);
             if (response.status === 201) {
                 // Creation successful
@@ -139,7 +158,7 @@ const Product = ({ productList, searchTerm }) => {
                         <tr key={product.id}>
                             <td>{product.name}</td>
                             <td>{product.description}</td>
-                            <td>{product.price}</td>
+                            <td>{product.price.toFixed(2)}</td>
                             <td>{product.duration}</td>
                             <td>
                                 <button onClick={() => handleViewDetails(product)}>
@@ -157,7 +176,7 @@ const Product = ({ productList, searchTerm }) => {
                     <h2>Product Details</h2>
                     <div>Name: {selectedProduct.name}</div>
                     <div>Description: {selectedProduct.description}</div>
-                    <div>Price: {selectedProduct.price}</div>
+                    <div>Price: {selectedProduct.price.toFixed(2)}</div>
                     <div>Duration: {selectedProduct.duration}</div>
                 </div>
             )}
@@ -170,7 +189,7 @@ const Product = ({ productList, searchTerm }) => {
                         <label htmlFor="description">Description:</label>
                         <input type="text" name="description" value={editedProduct.description} onChange={handleFormInputChange} />
                         <label htmlFor="price">Price:</label>
-                        <input type="number" name="price" value={editedProduct.price} onChange={handleFormInputChange} />
+                        <input type="text" name="price" value={editedProduct.price.toFixed(2)} onChange={handleFormInputChange} />
                         <label htmlFor="duration">Duration:</label>
                         <input type="number" name="duration" value={editedProduct.duration} onChange={handleFormInputChange} />
                         <button type="submit">Save Changes</button>
@@ -187,7 +206,7 @@ const Product = ({ productList, searchTerm }) => {
                         <label htmlFor="description">Description:</label>
                         <input type="text" name="description" value={formData.description} onChange={handleNewFormInputChange} placeholder="Description" required />
                         <label htmlFor="price">Price:</label>
-                        <input type="number" name="price" value={formData.price} onChange={handleNewFormInputChange} placeholder="Price" required />
+                        <input type="text" name="price" value={formData.price} onChange={handleNewFormInputChange} placeholder="Price" required />
                         <label htmlFor="duration">Duration:</label>
                         <input type="number" name="duration" value={formData.duration} onChange={handleNewFormInputChange} placeholder="Duration" required />
                         <button type="submit">Add Product</button>
@@ -208,6 +227,7 @@ const Product = ({ productList, searchTerm }) => {
                 />
                 <button onClick={() => handlePageChange(currentPage + 1)} disabled={!paginationLinks.find(item => item.rel === 'next')}>Next</button>
                 <button onClick={() => handlePageChange(totalPages)} disabled={!paginationLinks.find(item => item.rel === 'last')}>Last</button>
+		<button onClick={() => setShowAddForm(true)}>Add Product</button> {/* Add button */}
             </div>
         </div>
     );

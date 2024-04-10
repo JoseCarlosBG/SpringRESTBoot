@@ -69,6 +69,7 @@ body {
     border-radius: 0; /* Remove the rounded corners */
     padding: px; /* Add some padding */
     margin-left: 50px; /* Add left margin */
+    color: black;
 }
 
 .search-box select {
@@ -78,6 +79,7 @@ body {
     width: 100px; /* Match the width */
     border-radius: 0; /* Remove the rounded corners */
     padding: 0px; /* Add some padding */
+    color: black;
 }
 
 .icons {
@@ -92,6 +94,17 @@ body {
     color: grey;
 }
 
+td{
+    color: black;
+}
+
+div{
+    color: black;
+}
+
+input{
+    color: black;
+}
 .auth-buttons button {
     font-family: 'Roboto', sans-serif; /* Apply the 'Roboto' font */
     font-size: 12px; /* Increase the font size */
@@ -132,6 +145,7 @@ body {
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #ddd;
+    color: black;
 }
 
 .login-box .login {
